@@ -1,4 +1,3 @@
-from DAL.DBConnect import Connection
 from DAL.account import AccountDAL
 
 class AccountBLL:
