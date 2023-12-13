@@ -6,6 +6,7 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 import cv2
 import numpy as np
+from unidecode import unidecode
 from BLL.face import FaceBLL
 
 class Main_Form(Toplevel):
@@ -73,9 +74,9 @@ class Main_Form(Toplevel):
         img4 = Image.open(os.path.join(script_directory, "images", "checked.png"))
         img4 = img4.resize((300,300),Image.LANCZOS)
         self.photoImg4 = ImageTk.PhotoImage(img4)
-        btn4 = Button(canvas,image=self.photoImg4,cursor="hand2",bg="#FFB6C1")
+        btn4 = Button(canvas,image=self.photoImg4,cursor="hand2",bg="#FFB6C1",command=self.attendance)
         btn4.place(x=self.winfo_screenwidth()/2+375,y=self.winfo_screenheight()/2-175,width=300,height=300)
-        btn4_lbl = Button(canvas,text="Danh sách điểm danh",cursor="hand2",bg='#aa4d73', fg="white", font=("Arial", 15, "bold"))
+        btn4_lbl = Button(canvas,text="Danh sách điểm danh",cursor="hand2",bg='#aa4d73', fg="white", font=("Arial", 15, "bold"),command=self.attendance)
         btn4_lbl.place(x=self.winfo_screenwidth()/2+375,y=self.winfo_screenheight()/2+125,width=300,height=50)
 
     def logout(self):
@@ -108,7 +109,7 @@ class Main_Form(Toplevel):
             ids.append(id)
 
             cv2.imshow("Training", imageNP)
-            cv2.waitKey(1)
+            cv2.waitKey(1)==13
         ids = np.array(ids)
         clf = cv2.face.LBPHFaceRecognizer_create()
         clf.train(faces,ids)
@@ -127,7 +128,7 @@ class Main_Form(Toplevel):
                 now = datetime.now()
                 d1=now.strftime("%d/%m/%Y")
                 dtString = now.strftime("%H:%M:%S")
-                f.writelines(f"\n{i},{r},{n},{dtString},{d1},Attended")
+                f.writelines(f"\n{i},{r},{n},{dtString},{d1},Có mặt")
 
     def face(self):
         def draw_boundary(img, classifier, scaleFactor, minNeighbors,text,color, clf):
@@ -138,27 +139,21 @@ class Main_Form(Toplevel):
             for(x,y,w,h) in features:
                 cv2.rectangle(img,(x,y), (x+w,y+h), (0,255,0),3)
                 id,predict =clf.predict(gray_image[y:y+h,x:x+w])
-                print(id)
                 confidence = int((100*(1-predict/300)))
 
                 i = FaceBLL().select_id(id)
                 n = FaceBLL().select_name(id)
                 r = FaceBLL().select_roll(id)
 
-                if confidence>77:
-                    text_mssv = f"MSSV:{i}".encode('utf-8').decode('utf-8')
-                    text_stt = f"STT:{r}".encode('utf-8').decode('utf-8')
-                    text_name = f"Name:{n}".encode('utf-8').decode('utf-8')
-
-                    cv2.putText(img, text_mssv, (x, y-55), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255, 255, 255), 2)
-                    cv2.putText(img, text_stt, (x, y-30), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255, 255, 255), 2)
-                    cv2.putText(img, text_name, (x, y-5), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255, 255, 255), 2)
-
+                if confidence > 77:
+                    cv2.putText(img, f"MSSV: {unidecode(str(i))}", (x, y-75), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
+                    cv2.putText(img, f"STT: {unidecode(str(r))}", (x, y-55), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
+                    cv2.putText(img, f"Name: {unidecode(str(n))}", (x, y-30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
                     self.mark_attendance(i, r, n)
 
                 else:
                     cv2.rectangle(img,(x,y), (x+w,y+h),(0,0,255),3)
-                    cv2.putText(img,"Unknown",(x,y-55),cv2.FONT_HERSHEY_COMPLEX,0.8,(255,255,255),3)
+                    cv2.putText(img,"Unknown",(x,y-55),cv2.FONT_HERSHEY_SIMPLEX,0.8,(255,255,255),2)
 
                 coord = [x,y,w,h]
             return coord
@@ -183,3 +178,10 @@ class Main_Form(Toplevel):
 
         video_cap.release()
         cv2.destroyAllWindows()
+
+    def attendance(self):
+        self.destroy()
+        from GUI.attendance import Attendance_Form
+        form = Attendance_Form()
+        form.lift()
+        form.mainloop()
