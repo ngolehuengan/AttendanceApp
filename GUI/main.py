@@ -146,9 +146,9 @@ class Main_Form(Toplevel):
                 r = FaceBLL().select_roll(id)
 
                 if confidence > 77:
-                    cv2.putText(img, f"MSSV: {unidecode(str(i))}", (x, y-75), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
-                    cv2.putText(img, f"STT: {unidecode(str(r))}", (x, y-55), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
-                    cv2.putText(img, f"Name: {unidecode(str(n))}", (x, y-30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
+                    cv2.putText(img, f"MSSV: {unidecode(str(i))}", (x, y-75), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0,0,0), 2)
+                    cv2.putText(img, f"STT: {unidecode(str(r))}", (x, y-55), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0,0,0), 2)
+                    cv2.putText(img, f"Name: {unidecode(str(n))}", (x, y-30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0,0,0), 2)
                     self.mark_attendance(i, r, n)
 
                 else:

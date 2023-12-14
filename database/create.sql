@@ -310,3 +310,7 @@ CALL subj_insert('841455','Ngôn ngữ học máy tính', 5);
 CALL subj_insert('841456','Công nghệ tri thức', 5);
 CALL subj_insert('841457','Học sâu', 5);
 CALL subj_insert('841458','Trí tuệ nhân tạo nâng cao', 5);
+
+CALL InsertStudent('841422','2023-2024','Học kỳ 1','01','3121410339','Ngô Lê Huệ Ngân','Nữ','2003-02-17','ngolehuengan170203@gmail.com','0123456789','HCM','Mr. Khoa','No');
+CALL InsertStudent('841422','2023-2024','Học kỳ 1','01','3121410361','Trần Thụy Ái Nhân','Nữ','2003-10-06','ainhan610@gmail.com','0857288009','HCM','Mr. Khoa','No');
+CALL InsertStudent('841422','2023-2024','Học kỳ 1','01','3120410369','Bùi Thị Yến Nhi','Nữ','2002-01-01','abc@gmail.com','0123456789','HCM','Mr. Khoa','No');

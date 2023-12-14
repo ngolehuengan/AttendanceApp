@@ -402,15 +402,13 @@ class Student_Form(Toplevel):
         else:
             try:
                 data=StudentBLL().show()
-                id=0
-                for i in data:
-                    id+=1
+                id=self.var_roll.get()
                 StudentBLL().update(StudentDTO(
                     self.var_course.get(),
                     self.var_year.get(),
                     self.var_sem.get(),
                     self.var_class.get(),
-                    str(id + 1),
+                    self.var_id.get(),
                     self.var_name.get(),
                     self.var_gender.get(),
                     self.var_dob.get(),
